@@ -78,10 +78,10 @@ namespace UnitTests
         }
 
         [Test]
-        [TestCase('c', 10, TestName = "Swap_ReturnCorrectScore_GivenValidScore('c')")]
-        [TestCase('A', 1, TestName = "Swap_ReturnCorrectScore_GivenValidScore('A')")]
-        [TestCase('Z', 26, TestName = "Swap_ReturnCorrectScore_GivenValidScore('Z')")]
-        public void Swap_ReturnCorrectScore_GivenValidScore(char letter, int tileValue)
+        [TestCase('c', 10, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('c')")]
+        [TestCase('A', 1, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('A')")]
+        [TestCase('Z', 26, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('Z')")]
+        public void Swap_ReturnRandomCharacter_GivenValidCharacter(char letter, int tileValue)
         {
             GameState gameState = new GameState();
             Player p1 = new Player();
