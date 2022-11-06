@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 using NUnit.Framework;
-using Scrabble2018;
-using Scrabble2018.View;
-using Scrabble2018.Model;
+using Scrabble.View;
+using Scrabble.Model;
 
 namespace UnitTests
 {
@@ -93,12 +92,13 @@ namespace UnitTests
         [Test]
         public void GameState_UpdateState_char_ShouldReturn_PlayerCountingScore_Zero()
         {
-            GameState gs = new GameState();
-
+            GameState.GSInstance.Initialise(1);
             char[,] b = { { 'a', 'b' } };
-            gs.UpdateState(b);
 
+            var gs = GameState.GSInstance;
+            gs.UpdateState(b);
             var result = gs.LastAction;
+            Console.WriteLine(result);
             Assert.AreEqual("play", result);
 
         }

@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Scrabble2018;
-using Scrabble2018.Model;
-using Scrabble2018.Model.Game;
+using Scrabble.Model;
+using Scrabble.Model.Game;
 using System;
 
 namespace UnitTests
