@@ -9,12 +9,6 @@ namespace UnitTests.Model.Word
 {
     public class WordCollectorTest
     {
-        [SetUp]
-        public void Setup()
-        {
-
-        }
-
         [Test]
         public static void VCollect_ReturnZero_GivenNullGameState()
         {
