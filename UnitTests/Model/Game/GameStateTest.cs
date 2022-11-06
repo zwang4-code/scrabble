@@ -17,7 +17,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void GameState_GamePass_PlayerNow_ShouldReturn_4()
+        public void GameState_GamePass_PlayerNow_ShouldReturn_3()
         {
             GameState gs = new GameState();
             gs.NumOfPlayers = 4;
