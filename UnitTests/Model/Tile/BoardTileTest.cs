@@ -1,9 +1,7 @@
 using NUnit.Framework;
 using Scrabble;
-using System.Windows.Media;
 
 namespace UnitTests
-
 
 {
     public class BoardTileTest
