@@ -145,54 +145,48 @@ namespace ScrabbleTest
         [TestCase(0, 0, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_MakeOneMove_NotInCenter_NotAsFirstMove(0, 0)")]
         [TestCase(4, 8, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_MakeOneMove_NotInCenter_NotAsFirstMove(4, 8)")]
         [TestCase(14, 14, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_MakeOneMove_NotInCenter_NotAsFirstMove(14, 14)")]
-        public static bool CorrectMove_ReturnTrue_MakeOneMove_NotInCenter_NotAsFirstMove(int row, int col)
+        public bool CorrectMove_ReturnTrue_MakeOneMove_NotInCenter_NotAsFirstMove(int row, int col)
         {
             // Arrange
-            GameState gs = new GameState();
             MoveRecorder mr = new MoveRecorder();
-            gs.FirstMove = false;   // Make this move NOT the first move
-            mr.Record(row, col);    // Make One move 
+            mr.Record(row, col); 
 
             // Act and Assert
-            return MoveValidator.CorrectMove(mr, gs);
+            return MoveValidator.CorrectMove(mr, _mockGameState);
         }
 
         [Test]
-        [TestCase(4, 10, -2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(4, 10, -2)")]
-        [TestCase(9, 2, 3, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(9, 2, 3)")]
-        [TestCase(0, 0, 2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(0, 0, 2)")]
-        public static bool CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(int startRow, int startCol, int skipFactor)
+        [TestCase(4, 10, -2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_Invalid_NonConsecutive_HorizontalMoves(4, 10, -2)")]
+        [TestCase(9, 2, 3, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_Invalid_NonConsecutive_HorizontalMoves(9, 2, 3)")]
+        [TestCase(0, 0, 2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_Invalid_NonConsecutive_HorizontalMoves(0, 0, 2)")]
+        public bool CorrectMove_ReturnFalse_Invalid_NonConsecutive_HorizontalMoves(int startRow, int startCol, int skipFactor)
         {
             // Arrange
-            GameState gs = new GameState();
             MoveRecorder mr = new MoveRecorder();
-            gs.FirstMove = false;                           // Make this move NOT the first move
             mr.Record(startRow, startCol);                  // Make one move 
             mr.Record(startRow, startCol += skipFactor);    // Make a skip move horizontally
 
             // Act and Assert
-            return MoveValidator.CorrectMove(mr, gs);
+            return MoveValidator.CorrectMove(mr, _mockGameState);
         }
 
         [Test]
-        [TestCase(4, 10, -2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(4, 10, -2)")]
-        [TestCase(9, 2, 3, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(9, 2, 3)")]
-        [TestCase(0, 0, 2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_MakeNonConsecutiveHorizontalMoves(0, 0, 2)")]
-        public static bool CorrectMove_ReturnFalse_MakeNonConsecutiveVerticallMoves(int startRow, int startCol, int skipFactor)
+        [TestCase(4, 10, -2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_Invalid_NonConsecutive_VerticallMoves(4, 10, -2)")]
+        [TestCase(9, 2, 3, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_Invalid_NonConsecutive_VerticallMoves(9, 2, 3)")]
+        [TestCase(0, 0, 2, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_Invalid_NonConsecutive_VerticallMoves(0, 0, 2)")]
+        public bool CorrectMove_ReturnFalse_Invalid_NonConsecutive_VerticallMoves(int startRow, int startCol, int skipFactor)
         {
             // Arrange
-            GameState gs = new GameState();
             MoveRecorder mr = new MoveRecorder();
-            gs.FirstMove = false;                           // Make this move NOT the first move
             mr.Record(startRow, startCol);                  // Make one move 
             mr.Record(startRow += skipFactor, startCol);     // Make a skip move verticlly
 
             // Act and Assert
-            return MoveValidator.CorrectMove(mr, gs);
+            return MoveValidator.CorrectMove(mr, _mockGameState);
         }
 
         [Test]
-        public void Validate_Return_Negative_1_GivenIncorrectMove()
+        public void Validate_Return_Negative_1_Invalid_FirstMove_OffCenter()
         {
             // Arrange: Create a gamestate with an empty board
             GameState gs = new GameState();
@@ -212,7 +206,7 @@ namespace ScrabbleTest
         [Test]
         public void Validate_Return_Negative_1_GivenUnchangedBoard()
         {
-            // Arrange: use _mockGameState and _mockMovementRecorder and do not make any change to the BoardChar
+            // Arrange: make no change to _mockGameState and _mockMovementRecorder
 
             // Act
             int result = MoveValidator.Validate(_mockGameState, _mockBoard, _mockMoveRecorder);
