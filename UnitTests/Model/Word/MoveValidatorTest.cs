@@ -13,12 +13,23 @@ namespace UnitTests
         [SetUp]
         public void Setup()
         {
-            // Place 5 pieces on the board
+            // Place 7 pieces on the board (G is placed at the center).
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O
+             *          D  I  N
+             ***************************/
             _mockBoard[7, 7] = 'G';
             _mockBoard[8, 7] = 'O';
             _mockBoard[9, 7] = 'O';
             _mockBoard[10, 7] = 'D';
-            _mockBoard[10, 8] = 'O';
+            _mockBoard[8, 8] = 'K';
+            _mockBoard[10, 8] = 'I';
+            _mockBoard[10, 9] = 'N';
+
+
         }
 
         [Test]
@@ -169,6 +180,7 @@ namespace UnitTests
             // did not make any change to the board
             GameState gs = new GameState();
             gs.BoardChar = _mockBoard;
+            gs.FirstMove = false;
             MoveRecorder mr = new MoveRecorder();  // does not matter here
 
 
@@ -185,7 +197,7 @@ namespace UnitTests
             // Arrange
             // Set up a GameState.BoardChar() with the mockBoard 
             GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
+            gs.BoardChar = (char[,])_mockBoard.Clone();
             gs.FirstMove = false;
 
             // Set movement directions and locations
@@ -197,11 +209,20 @@ namespace UnitTests
             // Set up an updated mockBoard to simulate that user has formed VALID WORDS in VERTICAL direction
             char[,] _updateMockBoard = new char[15, 15];
             _updateMockBoard = (char[,])_mockBoard.Clone();
-            _updateMockBoard[9, 8] = 'H';
+            _updateMockBoard[9, 8] = 'N';
             _updateMockBoard[11, 8] = 'T';
 
-            // Calculate expected score: [H + O + T] + [O + H] 
-            int expected = 4 + 1 + 1 + 1 + 4;
+            // Calculate expected score: [K + N + I + T] + [O + N] 
+            int expected = (5 + 1 + 1 + 1) + (1 + 1);
+
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O  N
+             *          D  I  N
+             *             T
+             ***************************/
 
             // Act
             int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
@@ -216,7 +237,7 @@ namespace UnitTests
             // Arrange
             // Set up a GameState.BoardChar() with the mockBoard 
             GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
+            gs.BoardChar = (char[,])_mockBoard.Clone();
             gs.FirstMove = false;
 
             // Set movement directions and locations
@@ -228,8 +249,17 @@ namespace UnitTests
             // Set up an updated mockBoard to simulate that user has formed INAVLID WORDS
             char[,] _updateMockBoard = new char[15, 15];
             _updateMockBoard = (char[,])_mockBoard.Clone();
-            _updateMockBoard[9, 8] = 'X';
+            _updateMockBoard[9, 8] = 'C';
             _updateMockBoard[11, 8] = 'Z';
+
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O  C
+             *          D  I  N
+             *             Z
+             ***************************/
 
             // Act
             int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
@@ -244,7 +274,7 @@ namespace UnitTests
             // Arrange
             // Set up a GameState.BoardChar() with the mockBoard 
             GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
+            gs.BoardChar = (char[,])_mockBoard.Clone();
             gs.FirstMove = false;
 
             // Set movement directions and locations
@@ -252,18 +282,23 @@ namespace UnitTests
             mr.Direction = "H";                     // simulate horizontal movement
             mr.Fixed = 9;                           // row where tiles are placed
             mr.Index.Add(8); mr.Index.Add(9);       // col where tiles are placed
-            mr.Index.Add(10); mr.Index.Add(11);
 
             // Set up an updated mockBoard to simulate that user has formed VALID WORDS in HORIZONTAL direction
             char[,] _updateMockBoard = new char[15, 15];
             _updateMockBoard = (char[,])_mockBoard.Clone();
-            _updateMockBoard[9, 8] = 'T';
-            _updateMockBoard[9, 9] = 'T';
-            _updateMockBoard[9, 10] = 'E';
-            _updateMockBoard[9, 11] = 'R';
+            _updateMockBoard[9, 8] = 'H';
+            _updateMockBoard[9, 9] = 'O';
 
-            // Calculate expected score: [O + T + T * 3 + E + R] + [T + O] 
-            int expected = 1 + 1 + 3 + 1 + 1 + 1 + 1;
+            // Calculate expected score: [O + H + O * 3] + [K * 2 + H + I] + [O * 3 + N]
+            int expected = (1 + 4 + 1 * 3) + (5 * 2 + 4 + 1) + (1 * 3 + 1);
+
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O  H  O
+             *          D  I  N
+             ***************************/
 
             // Act
             int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
@@ -278,7 +313,7 @@ namespace UnitTests
             // Arrange
             // Set up a GameState.BoardChar() with the mockBoard 
             GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
+            gs.BoardChar = (char[,])_mockBoard.Clone();
             gs.FirstMove = false;
 
             // Set movement directions and locations
@@ -293,6 +328,14 @@ namespace UnitTests
             _updateMockBoard[9, 8] = 'X';
             _updateMockBoard[9, 9] = 'Z';
 
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O  X  Z
+             *          D  I  N
+             ***************************/
+
             // Act
             int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
 
@@ -306,7 +349,7 @@ namespace UnitTests
             // Arrange
             // Set up a GameState.BoardChar() with the mockBoard 
             GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
+            gs.BoardChar = (char[,])_mockBoard.Clone();
             gs.FirstMove = false;
 
             // Set movement directions and locations
@@ -319,10 +362,18 @@ namespace UnitTests
             // Set up an updated mockBoard to simulate that user has formed VALID WORDS
             char[,] _updateMockBoard = new char[15, 15];
             _updateMockBoard = (char[,])_mockBoard.Clone();
-            _updateMockBoard[9, 8] = 'N';
+            _updateMockBoard[9, 8] = 'H';
 
-            // Calculate expected score: [N + O] + [O + N]
-            int expected = 1 + 1 + 1 + 1;
+            // Calculate expected score: [O + H] + [K + H + I]
+            int expected = (1 + 4) + (5 + 4 + 1);
+
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O  H
+             *          D  I  N
+             ***************************/
 
             // Act
             int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
@@ -337,7 +388,7 @@ namespace UnitTests
             // Arrange
             // Set up a GameState.BoardChar() with the mockBoard 
             GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
+            gs.BoardChar = (char[,])_mockBoard.Clone();
             gs.FirstMove = false;
 
             // Set movement directions and locations
@@ -350,7 +401,15 @@ namespace UnitTests
             // Set up an updated mockBoard to simulate that user has formed INVALID WORDS
             char[,] _updateMockBoard = new char[15, 15];
             _updateMockBoard = (char[,])_mockBoard.Clone();
-            _updateMockBoard[9, 8] = 'Z';
+            _updateMockBoard[9, 8] = 'V';
+
+            /* BOARD VIEW: 
+             * *************************
+             *          G
+             *          O  K
+             *          O  V
+             *          D  I  N
+             ***************************/
 
             // Act
             int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);

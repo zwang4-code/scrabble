@@ -171,7 +171,7 @@ namespace Scrabble.Model.Word
                     foreach (int col in movement.Index)
                     {
                         int rowTop = 0;
-                        for (rowTop = movement.Fixed; rowTop > 0; colLeft--)
+                        for (rowTop = movement.Fixed; rowTop > 0; rowTop--)
                         {
                             if (gs.BoardChar[rowTop - 1, col] != '\0') continue;
                             else break;
