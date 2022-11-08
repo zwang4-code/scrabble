@@ -12,7 +12,8 @@ namespace Scrabble.Model.Word
 
         public static int Locate(string s)
         {
-            var Lines = File.ReadAllLines(@"Model\Word\wordlist.txt");
+            // var Lines = File.ReadAllLines(@"Model\Word\wordlist.txt");
+            var Lines = File.ReadAllLines(@"Scrabble\\Model\\Word\\wordlist.txt");
             TxtItems = new List<string>(Lines);
             gamestate.WordsAppearedInValidation.Clear();
             foreach (string str in gamestate.WordsAppeared)

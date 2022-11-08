@@ -2,7 +2,7 @@
 using Scrabble.Controller;
 using System.Windows.Media;
 
-namespace UnitTests.Controller
+namespace ScrabbleTest.Controller
 {
     public class GameControllerTest
     {
@@ -36,9 +36,10 @@ namespace UnitTests.Controller
         [Test]
         public void GameController_UpdateColor_GivenPosition()
         {
-            SolidColorBrush expectedColor = Brushes.OrangeRed;
+            SolidColorBrush expectedColor = Brushes.Gold;
             Game game = new Game();
-            SolidColorBrush actualColor = game.UpdateColor(1, 2);
+            SolidColorBrush actualColor = game.UpdateColor(7, 7);
+            //Assert.IsNotNull(actualColor);
             Assert.AreEqual(expectedColor, actualColor);
         }
 
