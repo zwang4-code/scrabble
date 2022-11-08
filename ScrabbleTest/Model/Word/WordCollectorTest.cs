@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ScrabbleTest
+namespace UnitTests.Model.Word
 {
     public class WordCollectorTest
     {
@@ -26,7 +26,7 @@ namespace ScrabbleTest
             char[,] bc = gs.BoardChar;
             int i = 13, j = 6;
             bc[i, j] = 'T';
-            bc[i+1, j] = 'O';
+            bc[i + 1, j] = 'O';
 
             int result = WordCollector.VCollect(i, j, bc, gs);
             Assert.AreEqual(2, result);
@@ -135,6 +135,65 @@ namespace ScrabbleTest
 
             int result = WordCollector.HCollect(i, j, bc, gs);
             Assert.AreEqual(-1, result);
+        }
+
+        [Test]
+        public static void VCollect_ReturnZero_GivenWordsAppeardForVertical()
+        {
+            GameState gs = new GameState();
+            char[,] bc = gs.BoardChar;
+            int i = 12, j = 6;
+            bc[i, j] = 'A';
+            bc[i + 1, j] = 'S';
+            //bc[i + 2, j] = '\0';
+            gs.WordsAppeared.Add("AS");
+
+            int result = WordCollector.VCollect(i, j, bc, gs);
+            Assert.AreEqual(0, result);
+        }
+
+        [Test]
+        public static void VCollect_ReturnZero_GivenWordsAppeardOnLastRowForVertical()
+        {
+            GameState gs = new GameState();
+            char[,] bc = gs.BoardChar;
+            int i = 13, j = 6;
+            bc[i, j] = 'A';
+            bc[i + 1, j] = 'S';
+            //bc[i + 2, j] = '\0';
+            gs.WordsAppeared.Add("AS");
+
+            int result = WordCollector.VCollect(i, j, bc, gs);
+            Assert.AreEqual(0, result);
+        }
+
+        [Test]
+        public static void HCollect_ReturnZero_GivenWordsAppeardForHorizontal()
+        {
+            GameState gs = new GameState();
+            char[,] bc = gs.BoardChar;
+            int j = 12, i = 6;
+            bc[i, j] = 'A';
+            bc[i, j + 1] = 'S';
+            bc[i, j + 2] = '\0';
+            gs.WordsAppeared.Add("AS");
+
+            int result = WordCollector.HCollect(i, j, bc, gs);
+            Assert.AreEqual(0, result);
+        }
+
+        [Test]
+        public static void HCollect_ReturnZero_GivenWordsAppeardOnLastRowForHorizontal()
+        {
+            GameState gs = new GameState();
+            char[,] bc = gs.BoardChar;
+            int j = 13, i = 6;
+            bc[i, j] = 'A';
+            bc[i, j + 1] = 'S';
+            gs.WordsAppeared.Add("AS");
+
+            int result = WordCollector.HCollect(i, j, bc, gs);
+            Assert.AreEqual(0, result);
         }
     }
 }
