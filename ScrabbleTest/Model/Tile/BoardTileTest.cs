@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Scrabble;
+using System.Windows.Media;
 
 namespace ScrabbleTest
 
@@ -121,6 +122,46 @@ namespace ScrabbleTest
 
             // Assert
             Assert.IsTrue(true);
+        }
+
+        [Test]
+        [TestCase(0, 0, TW, TestName = "DetermineColor_Return_CorrectColor_GivenValidPosition(0, 0)")]
+        [TestCase(1, 1, DW, TestName = "DetermineColor_Return_CorrectColor_GivenValidPosition(1, 1)")]
+        [TestCase(0, 3, DL, TestName = "DetermineColor_Return_CorrectColor_GivenValidPosition(0, 3)")]
+        [TestCase(1, 5, TL, TestName = "DetermineColor_Return_CorrectColor_GivenValidPosition(1, 5)")]
+        [TestCase(7, 7, ST, TestName = "DetermineColor_Return_CorrectColor_GivenValidPosition(7, 7)")]
+        [TestCase(0, 1, __, TestName = "DetermineColor_Return_CorrectColor_GivenValidPosition(0, 1)")]
+        public void DetermineColor_Return_CorrectColor_GivenValidPosition(int row, int col, TileType type)
+        {
+            // Arrange
+            SolidColorBrush expectedColor;
+            switch(type)
+            {
+                case TileType.WordTriple:
+                    expectedColor = Brushes.OrangeRed;
+                    break;
+                case TileType.WordDouble:
+                    expectedColor = Brushes.Coral;
+                    break;
+                case TileType.LetterDouble:
+                    expectedColor = Brushes.LightSkyBlue;
+                    break;
+                case TileType.LetterTriple:
+                    expectedColor = Brushes.MediumBlue;
+                    break;
+                case TileType.Start:
+                    expectedColor = Brushes.Gold;
+                    break;
+                default:
+                    expectedColor = Brushes.Bisque;
+                    break;
+            }
+
+            // Act
+            SolidColorBrush actualColor = BoardTiles.DetermineColor(row, col);
+
+            // Assert
+            Assert.AreEqual(expectedColor, actualColor);
         }
     }
 }
