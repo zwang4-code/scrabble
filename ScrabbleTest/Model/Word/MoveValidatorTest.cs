@@ -7,13 +7,19 @@ namespace ScrabbleTest
 {
     public class MoveValidatorTests
     {
-        // Set up a mock Board
-        private char[,] _mockBoard = new char[15, 15];
+        // Set up a mock Board to be used in some unit tests
+        private char[,] _mockBoard;
+
+        // Set up a game state to be used in some unit tests
+        private GameState _mockGameState;
+
+        // Set up a mock move recorder to be used in some unit tests
+        private MoveRecorder _mockMoveRecorder;
 
         [SetUp]
         public void Setup()
         {
-            // Place 7 pieces on the board (G is placed at the center).
+            // Place 7 pieces on the mock board (G is placed at the center).
             /* BOARD VIEW: 
              * *************************
              *          G
@@ -21,6 +27,7 @@ namespace ScrabbleTest
              *          O
              *          D  I  N
              ***************************/
+            _mockBoard = new char[15, 15];
             _mockBoard[7, 7] = 'G';
             _mockBoard[8, 7] = 'O';
             _mockBoard[9, 7] = 'O';
@@ -29,76 +36,103 @@ namespace ScrabbleTest
             _mockBoard[10, 8] = 'I';
             _mockBoard[10, 9] = 'N';
 
+            // Fill the GameState.BoardChar() with the mockBoard 
+            _mockGameState = new GameState();
+            _mockGameState.BoardChar = (char[,])_mockBoard.Clone();
+            _mockGameState.FirstMove = false;
 
+            _mockMoveRecorder = new MoveRecorder();
         }
 
         [Test]
         [TestCase(6, 7, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_FirstMoveNotInCenter(6, 7)")]
         [TestCase(7, 6, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_FirstMoveNotInCenter(7, 6)")]
         [TestCase(8, 7, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_FirstMoveNotInCenter(8, 7)")]
-        public static bool CorrectMove_ReturnFalse_FirstMoveNotInCenter(int row, int col)
+        public static bool CorrectMove_ReturnFalse_FirstMoveNotInCenter(int firstMoveRow, int firstMoveCol)
         {
-            // Arrange
+            // Arrange: Create a new game state object with an empty board 
             GameState gs = new GameState();
+
+            // Make the first move OFF center
             MoveRecorder mr = new MoveRecorder();
-            mr.Record(row, col);  // make first move
+            mr.Record(firstMoveRow, firstMoveCol);
 
             // Act and Assert
             return MoveValidator.CorrectMove(mr, gs);
         }
 
         [Test]
-        [TestCase(1, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_FirstMoveInCenter_ThenConsecutiveHorizontalMoves(1)")]
-        [TestCase(-1, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_FirstMoveInCenter_ThenConsecutiveHorizontalMoves(-1)")]
-        public static bool CorrectMove_ReturnTrue_FirstMoveInCenter_ThenConsecutiveHorizontalMoves(int increment)
+        [TestCase(0, 0, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_Valid_Consecutive_HorizontalMoves(0, 0)")]
+        [TestCase(5, 8, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_Valid_Consecutive_HorizontalMoves(5, 8)")]
+        [TestCase(13, 7, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_Valid_Consecutive_HorizontalMoves(10, 7)")]
+        public bool CorrectMove_ReturnTrue_Valid_Consecutive_HorizontalMoves(int startRow, int startCol)
         {
-            // Arrange: make first move at center
-            int row = 7, col = 7;
-            GameState gs = new GameState();
+            // Arrange: Simulate VALID moves that DO NOT OVERLAP with current _mockBoard 
             MoveRecorder mr = new MoveRecorder();
-            mr.Record(row, col);
-
-            // Arrange: make consecutive horizontal moves from center
-            // If increment == 1, means moving to the right
-            // If increment == -1, means moving to the left
-            mr.Record(row, col += increment); 
-            mr.Record(row, col += increment);
-            mr.Record(row, col += increment);
+            mr.Record(startRow, startCol);
+            mr.Record(startRow, startCol += 1);
+            mr.Record(startRow, startCol += 1);
 
             // Act and Assert
-            return MoveValidator.CorrectMove(mr, gs);
+            return MoveValidator.CorrectMove(mr, _mockGameState);
         }
 
         [Test]
-        [TestCase(1, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_FirstMoveInCenter_ThenConsecutiveVerticallMoves(1)")]
-        [TestCase(-1, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_FirstMoveInCenter_ThenConsecutiveVerticallMoves(-1)")]
-        public static bool CorrectMove_ReturnTrue_FirstMoveInCenter_ThenConsecutiveVerticallMoves(int increment)
+        [TestCase(7, 6, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_InValid_Consecutive_HorizontalMoves(7, 6)")]
+        [TestCase(10, 8, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_InValid_Consecutive_HorizontalMoves(10, 8)")]
+        [TestCase(8, 7, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_InValid_Consecutive_HorizontalMoves(8, 7)")]
+        public bool CorrectMove_ReturnFalse_InValid_Consecutive_HorizontalMoves(int startRow, int startCol)
         {
-            // Arrange: make first move at center
-            int row = 7, col = 7;
-            GameState gs = new GameState();
+            // Arrange: Simulate INVALID moves that OVERLAPS with current _mockBoard 
             MoveRecorder mr = new MoveRecorder();
-            mr.Record(row, col);
-
-            // Arrange: make consecutive vertical moves from center
-            // If increment == 1, means moving down
-            // If increment == -1, means moving up
-            mr.Record(row += increment, col);
-            mr.Record(row += increment, col);
-            mr.Record(row += increment, col);
+            mr.Record(startRow, startCol);
+            mr.Record(startRow, startCol += 1);
+            mr.Record(startRow, startCol += 1);
 
             // Act and Assert
-            return MoveValidator.CorrectMove(mr, gs);
+            return MoveValidator.CorrectMove(mr, _mockGameState);
+        }
+
+        [Test]
+        [TestCase(0, 0, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_Valid_Consecutive_VerticalMoves(0, 0)")]
+        [TestCase(7, 3, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_Valid_Consecutive_VerticalMoves(7, 3)")]
+        [TestCase(6, 12, ExpectedResult = true, TestName = "CorrectMove_ReturnTrue_Valid_Consecutive_VerticalMoves(6, 12)")]
+        public bool CorrectMove_ReturnTrue_Valid_Consecutive_VerticalMoves(int startRow, int startCol)
+        {
+            // Arrange: Simulate VALID moves that DO NOT OVERLAP with current _mockBoard 
+            MoveRecorder mr = new MoveRecorder();
+            mr.Record(startRow, startCol);
+            mr.Record(startRow += 1, startCol);
+            mr.Record(startRow += 1, startCol);
+
+            // Act and Assert
+            return MoveValidator.CorrectMove(mr, _mockGameState);
+        }
+
+        [Test]
+        [TestCase(7, 7, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_InValid_Consecutive_VerticallMoves(7, 7)")]
+        [TestCase(10, 9, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_InValid_Consecutive_VerticallMoves(10, 9)")]
+        [TestCase(8, 9, ExpectedResult = false, TestName = "CorrectMove_ReturnFalse_InValid_Consecutive_VerticallMoves(8, 9)")]
+        public bool CorrectMove_ReturnFalse_InValid_Consecutive_VerticallMoves(int startRow, int startCol)
+        {
+            // Arrange: Simulate INVALID moves that OVERLAPS with current _mockBoard 
+            MoveRecorder mr = new MoveRecorder();
+            mr.Record(startRow, startCol);
+            mr.Record(startRow += 1, startCol);
+            mr.Record(startRow += 1, startCol);
+
+            // Act and Assert
+            return MoveValidator.CorrectMove(mr, _mockGameState);
         }
 
         [Test]
         public static void CorrectMove_ReturnTrue_MakeOneMove_InCenter_AsFirstMove()
         {
             // Arrange: make first and only move at center
-            int row = 7, col = 7;
             GameState gs = new GameState();
             MoveRecorder mr = new MoveRecorder();
-            mr.Record(row, col);
+            int centerRow = 7, centerCol = 7;
+            mr.Record(centerRow, centerCol);
 
             // Act
             bool result = MoveValidator.CorrectMove(mr, gs);
@@ -151,20 +185,22 @@ namespace ScrabbleTest
             MoveRecorder mr = new MoveRecorder();
             gs.FirstMove = false;                           // Make this move NOT the first move
             mr.Record(startRow, startCol);                  // Make one move 
-            mr.Record(startRow +=skipFactor, startCol);     // Make a skip move verticlly
+            mr.Record(startRow += skipFactor, startCol);     // Make a skip move verticlly
 
             // Act and Assert
             return MoveValidator.CorrectMove(mr, gs);
         }
 
         [Test]
-        public static void Validate_Return_Negative_1_GivenIncorrectMove()
+        public void Validate_Return_Negative_1_GivenIncorrectMove()
         {
-            // Arrange: Make CorrectMove() method return false by making the first move off center
+            // Arrange: Create a gamestate with an empty board
             GameState gs = new GameState();
-            MoveRecorder mr = new MoveRecorder();
-            mr.Record(6, 6);  // make first move NOT in center
             char[,] emptyBoard = new char[15, 15];
+
+            // Make CorrectMove() method return false by making the first move off center
+            MoveRecorder mr = new MoveRecorder();
+            mr.Record(6, 6);
 
             // Act
             int result = MoveValidator.Validate(gs, emptyBoard, mr);
@@ -176,35 +212,24 @@ namespace ScrabbleTest
         [Test]
         public void Validate_Return_Negative_1_GivenUnchangedBoard()
         {
-            // Arrange: Set up a GameState.BoardChar() using the mockBoard to simulate that user
-            // did not make any change to the board
-            GameState gs = new GameState();
-            gs.BoardChar = _mockBoard;
-            gs.FirstMove = false;
-            MoveRecorder mr = new MoveRecorder();  // does not matter here
-
+            // Arrange: use _mockGameState and _mockMovementRecorder and do not make any change to the BoardChar
 
             // Act
-            int result = MoveValidator.Validate(gs, _mockBoard, mr);
+            int result = MoveValidator.Validate(_mockGameState, _mockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(-1, result);
         }
-         
+
         [Test]
         public void Validate_Return_Sum_Given_Vertical_ValidWord()
         {
             // Arrange
-            // Set up a GameState.BoardChar() with the mockBoard 
-            GameState gs = new GameState();
-            gs.BoardChar = (char[,])_mockBoard.Clone();
-            gs.FirstMove = false;
-
             // Set movement directions and locations
-            MoveRecorder mr = new MoveRecorder();
-            mr.Direction = "V";                     // simulate vertical movement
-            mr.Fixed = 8;                           // col where tiles are placed
-            mr.Index.Add(9); mr.Index.Add(11);      // row where tiles are placed
+            _mockMoveRecorder.Direction = "V";                     // simulate vertical movement
+            _mockMoveRecorder.Fixed = 8;                           // col where tiles are placed
+            _mockMoveRecorder.Index.Add(9);         // row where tiles are placed
+            _mockMoveRecorder.Index.Add(11);
 
             // Set up an updated mockBoard to simulate that user has formed VALID WORDS in VERTICAL direction
             char[,] _updateMockBoard = new char[15, 15];
@@ -225,7 +250,7 @@ namespace ScrabbleTest
              ***************************/
 
             // Act
-            int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
+            int actual = MoveValidator.Validate(_mockGameState, _updateMockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -235,16 +260,11 @@ namespace ScrabbleTest
         public void Validate_Return_Negative_1_Given_Vertical_InValidWord()
         {
             // Arrange
-            // Set up a GameState.BoardChar() with the mockBoard 
-            GameState gs = new GameState();
-            gs.BoardChar = (char[,])_mockBoard.Clone();
-            gs.FirstMove = false;
-
             // Set movement directions and locations
-            MoveRecorder mr = new MoveRecorder();
-            mr.Direction = "V";                 // simulate vertical movement
-            mr.Fixed = 8;                       // col where tiles are placed 
-            mr.Index.Add(9); mr.Index.Add(11);  // row where tiles are placed
+            _mockMoveRecorder.Direction = "V";          // simulate vertical movement
+            _mockMoveRecorder.Fixed = 8;                // col where tiles are placed 
+            _mockMoveRecorder.Index.Add(9);             // row where tiles are placed
+            _mockMoveRecorder.Index.Add(11);
 
             // Set up an updated mockBoard to simulate that user has formed INAVLID WORDS
             char[,] _updateMockBoard = new char[15, 15];
@@ -262,7 +282,7 @@ namespace ScrabbleTest
              ***************************/
 
             // Act
-            int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
+            int actual = MoveValidator.Validate(_mockGameState, _updateMockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(-1, actual);
@@ -272,16 +292,11 @@ namespace ScrabbleTest
         public void Validate_Return_Sum_Given_Horizontal_ValidWord()
         {
             // Arrange
-            // Set up a GameState.BoardChar() with the mockBoard 
-            GameState gs = new GameState();
-            gs.BoardChar = (char[,])_mockBoard.Clone();
-            gs.FirstMove = false;
-
             // Set movement directions and locations
-            MoveRecorder mr = new MoveRecorder();
-            mr.Direction = "H";                     // simulate horizontal movement
-            mr.Fixed = 9;                           // row where tiles are placed
-            mr.Index.Add(8); mr.Index.Add(9);       // col where tiles are placed
+            _mockMoveRecorder.Direction = "H";            // simulate horizontal movement
+            _mockMoveRecorder.Fixed = 9;                  // row where tiles are placed
+            _mockMoveRecorder.Index.Add(8);               // col where tiles are placed
+            _mockMoveRecorder.Index.Add(9);
 
             // Set up an updated mockBoard to simulate that user has formed VALID WORDS in HORIZONTAL direction
             char[,] _updateMockBoard = new char[15, 15];
@@ -301,7 +316,7 @@ namespace ScrabbleTest
              ***************************/
 
             // Act
-            int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
+            int actual = MoveValidator.Validate(_mockGameState, _updateMockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -311,16 +326,11 @@ namespace ScrabbleTest
         public void Validate_Return_Negative_1_Given_Horizontal_InValidWord()
         {
             // Arrange
-            // Set up a GameState.BoardChar() with the mockBoard 
-            GameState gs = new GameState();
-            gs.BoardChar = (char[,])_mockBoard.Clone();
-            gs.FirstMove = false;
-
             // Set movement directions and locations
-            MoveRecorder mr = new MoveRecorder();
-            mr.Direction = "H";                     // simulate horizontal movement
-            mr.Fixed = 9;                           // row where tiles are placed
-            mr.Index.Add(8); mr.Index.Add(9);       // col where tiles are placed
+            _mockMoveRecorder.Direction = "H";          // simulate horizontal movement
+            _mockMoveRecorder.Fixed = 9;                // row where tiles are placed
+            _mockMoveRecorder.Index.Add(8);             // col where tiles are placed
+            _mockMoveRecorder.Index.Add(9);
 
             // Set up an updated mockBoard to simulate that user has formed INVALID WORDS
             char[,] _updateMockBoard = new char[15, 15];
@@ -337,7 +347,7 @@ namespace ScrabbleTest
              ***************************/
 
             // Act
-            int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
+            int actual = MoveValidator.Validate(_mockGameState, _updateMockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(-1, actual);
@@ -347,16 +357,10 @@ namespace ScrabbleTest
         public void Validate_Return_Sum_Given_SingleMove_No_Direction_ValidWord()
         {
             // Arrange
-            // Set up a GameState.BoardChar() with the mockBoard 
-            GameState gs = new GameState();
-            gs.BoardChar = (char[,])_mockBoard.Clone();
-            gs.FirstMove = false;
-
             // Set movement directions and locations
-            MoveRecorder mr = new MoveRecorder();
-            mr.Direction = "N";                     // simulate NO direction as user adds ONLY ONE TILE
+            _mockMoveRecorder.Direction = "N";                     // simulate NO direction as user adds ONLY ONE TILE
             Tuple<int, int> location = new Tuple<int, int>(9, 8);
-            mr.Moves.Add(location);                 // position where tile is placed
+            _mockMoveRecorder.Moves.Add(location);                 // position where tile is placed
 
 
             // Set up an updated mockBoard to simulate that user has formed VALID WORDS
@@ -376,7 +380,7 @@ namespace ScrabbleTest
              ***************************/
 
             // Act
-            int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
+            int actual = MoveValidator.Validate(_mockGameState, _updateMockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -386,16 +390,10 @@ namespace ScrabbleTest
         public void Validate_Return_Negative_1_Given_SingleMove_InValidWord()
         {
             // Arrange
-            // Set up a GameState.BoardChar() with the mockBoard 
-            GameState gs = new GameState();
-            gs.BoardChar = (char[,])_mockBoard.Clone();
-            gs.FirstMove = false;
-
             // Set movement directions and locations
-            MoveRecorder mr = new MoveRecorder();
-            mr.Direction = "N";                     // simulate NO direction as user adds ONLY ONE TILE
+            _mockMoveRecorder.Direction = "N";                     // simulate NO direction as user adds ONLY ONE TILE
             Tuple<int, int> location = new Tuple<int, int>(9, 8);
-            mr.Moves.Add(location);                 // position where tile is placed
+            _mockMoveRecorder.Moves.Add(location);                 // position where tile is placed
 
 
             // Set up an updated mockBoard to simulate that user has formed INVALID WORDS
@@ -412,7 +410,7 @@ namespace ScrabbleTest
              ***************************/
 
             // Act
-            int actual = MoveValidator.Validate(gs, _updateMockBoard, mr);
+            int actual = MoveValidator.Validate(_mockGameState, _updateMockBoard, _mockMoveRecorder);
 
             // Assert
             Assert.AreEqual(-1, actual);
