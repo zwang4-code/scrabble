@@ -5,7 +5,11 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrabble", "Scrabble\Scrabble.csproj", "{4162BFAA-E305-40C9-923C-3FD3FD42566F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrabbleTest", "ScrabbleTest\ScrabbleTest.csproj", "{7A54BF91-FCAA-4CE5-9EAB-0453DD7E14BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScrabbleTest", "ScrabbleTest\ScrabbleTest.csproj", "{7A54BF91-FCAA-4CE5-9EAB-0453DD7E14BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorAppiumSample", "AppiumUITest\CalculatorAppiumSample.csproj", "{C5D98D30-AB80-4AF0-B136-1E47132556B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrabbleAppiumTest", "ScrabbleAppiumTest\ScrabbleAppiumTest.csproj", "{CE85CB64-C334-445D-8585-15FA2A0A4656}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{7A54BF91-FCAA-4CE5-9EAB-0453DD7E14BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A54BF91-FCAA-4CE5-9EAB-0453DD7E14BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A54BF91-FCAA-4CE5-9EAB-0453DD7E14BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D98D30-AB80-4AF0-B136-1E47132556B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D98D30-AB80-4AF0-B136-1E47132556B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D98D30-AB80-4AF0-B136-1E47132556B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D98D30-AB80-4AF0-B136-1E47132556B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE85CB64-C334-445D-8585-15FA2A0A4656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE85CB64-C334-445D-8585-15FA2A0A4656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE85CB64-C334-445D-8585-15FA2A0A4656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE85CB64-C334-445D-8585-15FA2A0A4656}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
