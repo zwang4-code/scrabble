@@ -29,6 +29,9 @@ namespace ScrabbleAppiumTest
         private static WindowsElement dropdown = null;
         private static WindowsElement dropdown2 = null;
         private static WindowsElement startbutton = null;
+        private static WindowsElement finishbutton = null;
+        private static WindowsElement textbox = null;
+        private static IWebDriver newWindow = null;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -86,6 +89,47 @@ namespace ScrabbleAppiumTest
 
             startbutton = session.FindElementByAccessibilityId("StartButton");
             startbutton.Click();
+
+            newWindow = session.SwitchTo().Window(session.WindowHandles[0]);
+            Console.WriteLine(newWindow.Title);
+            finishbutton = session.FindElementByAccessibilityId("ValidateButton");
+            finishbutton.Click();
+
+            Thread.Sleep(3000);
+        }
+
+        [TestMethod]
+        public void Scrabble_SelectTwoTextPlayer()
+        {
+            dropdown = session.FindElementByAccessibilityId("CB1");
+            dropdown.Click();
+            dropdown.SendKeys("Text");
+            dropdown.SendKeys(Keys.Enter);
+
+            dropdown2 = session.FindElementByAccessibilityId("CB4");
+            dropdown2.Click();
+            dropdown2.SendKeys("Text");
+            dropdown2.SendKeys(Keys.Enter);
+
+            startbutton = session.FindElementByAccessibilityId("StartButton");
+            startbutton.Click();
+
+            newWindow = session.SwitchTo().Window(session.WindowHandles[0]);
+            textbox = session.FindElementByAccessibilityId("UserInputBox");
+            textbox.Click();
+            textbox.SendKeys("PASS");
+            Assert.AreEqual("PASS", textbox.Text);
+            Thread.Sleep(2000);
+            session.FindElementByAccessibilityId("SubmitButton").Click();
+            Thread.Sleep(3000);
+
+            session.SwitchTo().Window(session.WindowHandles[1]);
+            textbox = session.FindElementByAccessibilityId("UserInputBox");
+            textbox.Click();
+            textbox.SendKeys("RANK");
+            Assert.AreEqual("RANK", textbox.Text);
+            Thread.Sleep(2000);
+            session.FindElementByAccessibilityId("SubmitButton").Click();
             Thread.Sleep(3000);
         }
 
