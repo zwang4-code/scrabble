@@ -19,112 +19,76 @@ using OpenQA.Selenium.Appium.Windows;
 using System.Threading;
 using System;
 using OpenQA.Selenium;
-using System.Collections.Generic;
-
+using System.Windows.Controls;
 
 namespace ScrabbleAppiumTest
 {
     [TestClass]
-    public class ScenarioStandard : ScrabbleSession
+    public class ScrabbleTests : ScrabbleSession
     {
-        //private static WindowsElement header;
-        //private static WindowsElement calculatorResult;
-
-        [TestMethod]
-        public void SelectDesktopMode()
-        {
-            
-            IWebElement dropdown = session.FindElementByAccessibilityId("CB1");
-            dropdown.Click();
-
-
-            Thread.Sleep(3000);
-        
-        }
-
-        //[TestMethod]
-        //public void Division()
-        //{
-        //    // Find the buttons by their accessibility ids and click them in sequence to perform 88 / 11 = 8
-        //    session.FindElementByAccessibilityId("num8Button").Click();
-        //    session.FindElementByAccessibilityId("num8Button").Click();
-        //    session.FindElementByAccessibilityId("divideButton").Click();
-        //    session.FindElementByAccessibilityId("num1Button").Click();
-        //    session.FindElementByAccessibilityId("num1Button").Click();
-        //    session.FindElementByAccessibilityId("equalButton").Click();
-        //    Assert.AreEqual("8", GetCalculatorResultText());
-        //}
-
-        //[TestMethod]
-        //public void Multiplication()
-        //{
-        //    // Find the buttons by their names using XPath and click them in sequence to perform 9 x 9 = 81
-        //    session.FindElementByXPath("//Button[@Name='Nine']").Click();
-        //    session.FindElementByXPath("//Button[@Name='Multiply by']").Click();
-        //    session.FindElementByXPath("//Button[@Name='Nine']").Click();
-        //    session.FindElementByXPath("//Button[@Name='Equals']").Click();
-        //    Assert.AreEqual("81", GetCalculatorResultText());
-        //}
-
-        //[TestMethod]
-        //public void Subtraction()
-        //{
-        //    // Find the buttons by their accessibility ids using XPath and click them in sequence to perform 9 - 1 = 8
-        //    session.FindElementByXPath("//Button[@AutomationId=\"num9Button\"]").Click();
-        //    session.FindElementByXPath("//Button[@AutomationId=\"minusButton\"]").Click();
-        //    session.FindElementByXPath("//Button[@AutomationId=\"num1Button\"]").Click();
-        //    session.FindElementByXPath("//Button[@AutomationId=\"equalButton\"]").Click();
-        //    Assert.AreEqual("8", GetCalculatorResultText());
-        //}
-
-        //[TestMethod]
-        //[DataRow("One", "Plus", "Seven", "8")]
-        //[DataRow("Nine", "Minus", "One", "8")]
-        //[DataRow("Eight", "Divide by", "Eight", "1")]
-        //public void Templatized(string input1, string operation, string input2, string expectedResult)
-        //{
-        //    // Run sequence of button presses specified above and validate the results
-        //    session.FindElementByName(input1).Click();
-        //    session.FindElementByName(operation).Click();
-        //    session.FindElementByName(input2).Click();
-        //    session.FindElementByName("Equals").Click();
-        //    Assert.AreEqual(expectedResult, GetCalculatorResultText());
-        //}
+        private static WindowsElement dropdown = null;
+        private static WindowsElement dropdown2 = null;
+        private static WindowsElement startbutton = null;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            // Create session to launch a Calculator window
             Setup(context);
-
-            // Give user time to open the App under test
             Thread.Sleep(3000);
-
-            //// Identify calculator mode by locating the header
-            //try
-            //{
-            //    header = session.FindElementByAccessibilityId("Header");
-            //}
-            //catch
-            //{
-            //    header = session.FindElementByAccessibilityId("ContentPresenter");
-            //}
-
-            //// Ensure that calculator is in standard mode
-            //if (!header.Text.Equals("Standard", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    session.FindElementByAccessibilityId("TogglePaneButton").Click();
-            //    Thread.Sleep(TimeSpan.FromSeconds(1));
-            //    var splitViewPane = session.FindElementByClassName("SplitViewPane");
-            //    splitViewPane.FindElementByName("Standard Calculator").Click();
-            //    Thread.Sleep(TimeSpan.FromSeconds(1));
-            //    Assert.IsTrue(header.Text.Equals("Standard", StringComparison.OrdinalIgnoreCase));
-            //}
-
-            //// Locate the calculatorResult element
-            //calculatorResult = session.FindElementByAccessibilityId("CalculatorResults");
-            //Assert.IsNotNull(calculatorResult);
         }
+
+
+        [TestMethod]
+        public void Scrabble_SelectDesktopMode()
+        {
+            dropdown = session.FindElementByClassName(nameof(ComboBox));
+            dropdown.Click();
+            dropdown.SendKeys("Desktop");
+            dropdown.SendKeys(Keys.Enter);
+            Assert.AreEqual("Desktop", dropdown.Text);
+            Thread.Sleep(3000);
+        }
+
+        [TestMethod]
+        public void Scrabble_SelectMobileMode()
+        {
+            dropdown = session.FindElementByClassName(nameof(ComboBox));
+            dropdown.Click();
+            dropdown.SendKeys("Mobile");
+            dropdown.SendKeys(Keys.Enter);
+            Assert.AreEqual("Mobile", dropdown.Text);
+            Thread.Sleep(3000);
+        }
+
+        [TestMethod]
+        public void Scrabble_SelectTextMode()
+        {
+            dropdown = session.FindElementByClassName(nameof(ComboBox));
+            dropdown.Click();
+            dropdown.SendKeys("Text");
+            dropdown.SendKeys(Keys.Enter);
+            Assert.AreEqual("Text", dropdown.Text);
+            Thread.Sleep(3000);
+        }
+
+        [TestMethod]
+        public void Scrabble_SelectTwoDesktopPlayer()
+        {
+            dropdown = session.FindElementByAccessibilityId("CB1");
+            dropdown.Click();
+            dropdown.SendKeys("Desktop");
+            dropdown.SendKeys(Keys.Enter);
+
+            dropdown2 = session.FindElementByAccessibilityId("CB4");
+            dropdown2.Click();
+            dropdown2.SendKeys("Desktop");
+            dropdown2.SendKeys(Keys.Enter);
+
+            startbutton = session.FindElementByAccessibilityId("StartButton");
+            startbutton.Click();
+            Thread.Sleep(3000);
+        }
+
 
         [ClassCleanup]
         public static void ClassCleanup()

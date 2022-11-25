@@ -10,7 +10,7 @@ namespace ScrabbleAppiumTest
     {
         // Note: append /wd/hub to the URL if you're directing the test at Appium
         private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723/wd/hub";
-        private const string ScrabblePath = @"C:\Users\hh\Desktop\5210-Scrabble-GitHub\Scrabble\bin\Debug\Scrabble2018.exe";
+        private const string ScrabblePath = @"C:\Users\vdeepak\Downloads\Preedhi\Team2_Scrabble\Scrabble\bin\Debug\Scrabble2018.exe";
 
         protected static WindowsDriver<WindowsElement> session;
 
