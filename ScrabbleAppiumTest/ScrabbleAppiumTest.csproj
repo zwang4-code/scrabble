@@ -43,9 +43,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ScrabbleSession.cs" />
+    <Compile Include="MenuPageTest.cs" />
+    <Compile Include="SessionSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScrabbleTests.cs" />
+    <Compile Include="DesktopSessionTest.cs" />
+    <Compile Include="TextSessionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Castle.Core">
