@@ -1,20 +1,4 @@
-﻿//******************************************************************************
-//
-// Copyright (c) 2017 Microsoft Corporation. All rights reserved.
-//
-// This code is licensed under the MIT License (MIT).
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-//******************************************************************************
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Appium.Windows;
 using System.Threading;
 using System;
@@ -31,7 +15,8 @@ namespace ScrabbleAppiumTest
         private static WindowsElement startbutton = null;
         private static WindowsElement finishbutton = null;
         private static WindowsElement textbox = null;
-        private static IWebDriver newWindow = null;
+        private static IWebDriver windowHandler = null;
+
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -49,7 +34,7 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys("Desktop");
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Desktop", dropdown.Text);
-            Thread.Sleep(3000);
+            Thread.Sleep(1500);
         }
 
         [TestMethod]
@@ -60,7 +45,7 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys("Mobile");
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Mobile", dropdown.Text);
-            Thread.Sleep(3000);
+            Thread.Sleep(1500);
         }
 
         [TestMethod]
@@ -71,31 +56,53 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys("Text");
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Text", dropdown.Text);
-            Thread.Sleep(3000);
+            Thread.Sleep(1500);
         }
 
         [TestMethod]
         public void Scrabble_SelectTwoDesktopPlayer()
         {
+            // Choose Desktop mode for first player 
             dropdown = session.FindElementByAccessibilityId("CB1");
             dropdown.Click();
             dropdown.SendKeys("Desktop");
             dropdown.SendKeys(Keys.Enter);
+
+            // Choose Desktop mode for second player
 
             dropdown2 = session.FindElementByAccessibilityId("CB4");
             dropdown2.Click();
             dropdown2.SendKeys("Desktop");
             dropdown2.SendKeys(Keys.Enter);
 
+            // Start session
             startbutton = session.FindElementByAccessibilityId("StartButton");
             startbutton.Click();
+            Thread.Sleep(1500);
 
-            newWindow = session.SwitchTo().Window(session.WindowHandles[0]);
-            Console.WriteLine(newWindow.Title);
+            // Assert 2 windows will open
+            Assert.AreEqual(2, session.WindowHandles.Count);
+
+            // Get names of the window handlers
+            string firstWindow = session.WindowHandles[0];
+            string secondWindow = session.WindowHandles[1];
+
+            // Switch to first window, press "Finish" button, then close window
+            windowHandler = session.SwitchTo().Window(firstWindow);
+            Console.WriteLine(windowHandler.Title, " window open");
             finishbutton = session.FindElementByAccessibilityId("ValidateButton");
             finishbutton.Click();
+            windowHandler.Close();
+            Thread.Sleep(1500);
 
-            Thread.Sleep(3000);
+            // Switch to second window, then close window
+            windowHandler = session.SwitchTo().Window(secondWindow);
+            Console.WriteLine(windowHandler.Title, " window open");
+            windowHandler.Close();
+
+            // Assert no window open
+            Assert.AreEqual(0, session.WindowHandles.Count);
+            Thread.Sleep(1500);
         }
 
         [TestMethod]
@@ -114,7 +121,7 @@ namespace ScrabbleAppiumTest
             startbutton = session.FindElementByAccessibilityId("StartButton");
             startbutton.Click();
 
-            newWindow = session.SwitchTo().Window(session.WindowHandles[0]);
+            windowHandler = session.SwitchTo().Window(session.WindowHandles[0]);
             textbox = session.FindElementByAccessibilityId("UserInputBox");
             textbox.Click();
             textbox.SendKeys("PASS");

@@ -10,17 +10,19 @@ namespace ScrabbleAppiumTest
     {
         // Note: append /wd/hub to the URL if you're directing the test at Appium
         private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723/wd/hub";
-        private const string ScrabblePath = @"C:\Users\vdeepak\Downloads\Preedhi\Team2_Scrabble\Scrabble\bin\Debug\Scrabble2018.exe";
+        private const string ScrabblePath = @"C:\Users\hh\Desktop\5210-Scrabble-GitHub\Scrabble\bin\Debug\Scrabble2018.exe";
+        //@"C:\Users\vdeepak\Downloads\Preedhi\Team2_Scrabble\Scrabble\bin\Debug\Scrabble2018.exe";
+        //@"C:\Users\hh\Desktop\5210-Scrabble-GitHub\Scrabble\bin\Debug\Scrabble2018.exe";
 
         protected static WindowsDriver<WindowsElement> session;
 
         public static void Setup(TestContext context)
         {
-            // Launch Calculator application if it is not yet launched
+            // Launch Scrabble application if it is not yet launched
             if (session == null)
             {
-                // Create a new session to bring up an instance of the Calculator application
-                // Note: Multiple calculator windows (instances) share the same process Id
+                // Create a new session to bring up an instance of the Scrabble application
+                // Note: Multiple Scrabble windows (instances) share the same process Id
                 DesiredCapabilities appCapabilities = new DesiredCapabilities();
                 appCapabilities.SetCapability("app", ScrabblePath);
                 appCapabilities.SetCapability("deviceName", "WindowsPC");
