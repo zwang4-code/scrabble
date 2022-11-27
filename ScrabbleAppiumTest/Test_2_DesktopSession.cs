@@ -12,13 +12,12 @@ namespace ScrabbleAppiumTest
     public class Test_2_DesktopSession : SessionSetup
     {
         private static WindowsDriver<WindowsElement> desktopSession = null;
-        private WindowsElement dropdown = null;
-        private WindowsElement dropdown2 = null;
-        private WindowsElement startbutton = null;
         private WindowsElement passbutton = null;
         private WindowsElement swapbutton = null;
         private WindowsElement finishbutton = null;
         private WindowsElement finishTurnButton = null;
+        string firstWindow = "";
+        string secondWindow = "";
         private IWebDriver windowHandler = null;
 
 
@@ -29,32 +28,22 @@ namespace ScrabbleAppiumTest
             Thread.Sleep(3000);
         }
 
-        [TestMethod]
-        public void DesktopMode_With_Two_Players()
+        [TestInitialize]
+        public void DesktopMode_Start_For_Two_Players()
         {
-            // Choose Desktop mode for first player 
-            dropdown = desktopSession.FindElementByAccessibilityId("CB1");
-            dropdown.Click();
-            dropdown.SendKeys("Desktop");
-            dropdown.SendKeys(Keys.Enter);
+            // Choose Desktop mode for the first 2 players
+            StartGameWithTwoPlayers(desktopSession, "Desktop");
 
-            // Choose Desktop mode for second player
-            dropdown2 = desktopSession.FindElementByAccessibilityId("CB4");
-            dropdown2.Click();
-            dropdown2.SendKeys("Desktop");
-            dropdown2.SendKeys(Keys.Enter);
+            // Get names of the 2 window handlers
+            firstWindow = desktopSession.WindowHandles[0];
+            secondWindow = desktopSession.WindowHandles[1];
+        }
 
-            // Start session
-            startbutton = desktopSession.FindElementByAccessibilityId("StartButton");
-            startbutton.Click();
-            Thread.Sleep(1500);
-
+        [TestMethod]
+        public void DesktopMode_Test_Buttons()
+        {
             // Assert 2 windows will open
             Assert.AreEqual(2, desktopSession.WindowHandles.Count);
-
-            // Get names of the window handlers
-            string firstWindow = desktopSession.WindowHandles[0];
-            string secondWindow = desktopSession.WindowHandles[1];
 
             // Swith to first window, press "Pass" button
             windowHandler = desktopSession.SwitchTo().Window(firstWindow);
@@ -85,7 +74,11 @@ namespace ScrabbleAppiumTest
             Thread.Sleep(1000);
             finishTurnButton.Click();
             Thread.Sleep(1500);
+        }
 
+        [TestCleanup]
+        public void CloseWindows()
+        {
             // Close all windows
             CloseWindows(desktopSession);
 

@@ -10,10 +10,9 @@ namespace ScrabbleAppiumTest
     public class Test_3_TextSession : SessionSetup
     {
         private static WindowsDriver<WindowsElement> textSession = null;
-        private WindowsElement dropdown = null;
-        private WindowsElement dropdown2 = null;
-        private WindowsElement startbutton = null;
         private WindowsElement textbox = null;
+        string firstWindow = "";
+        string secondWindow = "";
         private IWebDriver windowHandler = null;
 
 
@@ -24,31 +23,22 @@ namespace ScrabbleAppiumTest
             Thread.Sleep(3000);
         }
 
-        [TestMethod]
-        public void TextMode_With_Two_Players()
+        [TestInitialize]
+        public void TextMode_Start_For_Two_Players()
         {
-            // Choose Text mode for first player
-            dropdown = textSession.FindElementByAccessibilityId("CB1");
-            dropdown.Click();
-            dropdown.SendKeys("Text");
-            dropdown.SendKeys(Keys.Enter);
-
-            // Choose Text mode for second player
-            dropdown2 = textSession.FindElementByAccessibilityId("CB4");
-            dropdown2.Click();
-            dropdown2.SendKeys("Text");
-            dropdown2.SendKeys(Keys.Enter);
-
-            // Start session
-            startbutton = textSession.FindElementByAccessibilityId("StartButton");
-            startbutton.Click();
-
-            // Assert 2 windows will open
-            Assert.AreEqual(2, textSession.WindowHandles.Count);
+            // Choose Text mode for the first two players
+            StartGameWithTwoPlayers(textSession, "Text");
 
             // Get names of the window handlers
-            string firstWindow = textSession.WindowHandles[0];
-            string secondWindow = textSession.WindowHandles[1];
+            firstWindow = textSession.WindowHandles[0];
+            secondWindow = textSession.WindowHandles[1];
+        }
+
+        [TestMethod]
+        public void TextMode_Test_InputBoxes()
+        {
+            // Assert 2 windows will open
+            Assert.AreEqual(2, textSession.WindowHandles.Count);
 
             // Enter "PASS" in textbox of first window
             windowHandler = textSession.SwitchTo().Window(firstWindow);
@@ -58,6 +48,7 @@ namespace ScrabbleAppiumTest
             textbox.SendKeys("PASS");
             Assert.AreEqual("PASS", textbox.Text);
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
+            Thread.Sleep(1500);
 
             // Enter "RANK" in textbox of second window
             textSession.SwitchTo().Window(secondWindow);
@@ -68,7 +59,11 @@ namespace ScrabbleAppiumTest
             Assert.AreEqual("RANK", textbox.Text);
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
             Thread.Sleep(1500);
+        }
 
+        [TestCleanup]
+        public void CloseWindows()
+        {
             // Close all windows
             CloseWindows(textSession);
 

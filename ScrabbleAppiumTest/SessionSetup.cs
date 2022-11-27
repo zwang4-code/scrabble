@@ -34,6 +34,30 @@ namespace ScrabbleAppiumTest
             return session;
         }
 
+        public void StartGameWithTwoPlayers(WindowsDriver<WindowsElement> session, string mode)
+        {
+            WindowsElement dropdown = null;
+            WindowsElement dropdown2 = null;
+            WindowsElement startbutton = null;
+
+            // Choose Desktop mode for first player 
+            dropdown = session.FindElementByAccessibilityId("CB1");
+            dropdown.Click();
+            dropdown.SendKeys(mode);
+            dropdown.SendKeys(Keys.Enter);
+
+            // Choose Desktop mode for second player
+            dropdown2 = session.FindElementByAccessibilityId("CB4");
+            dropdown2.Click();
+            dropdown2.SendKeys(mode);
+            dropdown2.SendKeys(Keys.Enter);
+
+            // Start session
+            startbutton = session.FindElementByAccessibilityId("StartButton");
+            startbutton.Click();
+            Thread.Sleep(1500);
+        }
+
         public void CloseWindows(WindowsDriver<WindowsElement> session)
         {
             // Close all the windows
