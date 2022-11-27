@@ -25,7 +25,6 @@ namespace ScrabbleAppiumTest
             Thread.Sleep(3000);
         }
 
-
         [TestMethod]
         public void MenuTest_1_Select_DesktopMode()
         {
@@ -34,6 +33,7 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys("Desktop");
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Desktop", dropdown.Text);
+            SaveScreenShotToDocuments(menuSession);
             Thread.Sleep(1500);
         }
 
@@ -45,6 +45,7 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys("Text");
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Text", dropdown.Text);
+            SaveScreenShotToDocuments(menuSession);
             Thread.Sleep(1500);
         }
 
@@ -56,6 +57,7 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys("Mobile");
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Mobile", dropdown.Text);
+            SaveScreenShotToDocuments(menuSession);
             Thread.Sleep(1500);
         }
 
@@ -78,6 +80,8 @@ namespace ScrabbleAppiumTest
             // Assert "Author" appears on the author window
             authorElement = menuSession.FindElementByAccessibilityId("About");
             Assert.IsTrue(authorElement.Text.Contains("Author"));
+
+            SaveScreenShotToDocuments(menuSession);
 
             // Close all windows
             CloseWindows(menuSession);

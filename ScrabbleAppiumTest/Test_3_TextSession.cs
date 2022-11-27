@@ -11,7 +11,6 @@ namespace ScrabbleAppiumTest
     {
         private static WindowsDriver<WindowsElement> textSession = null;
         private WindowsElement textbox = null;
-        private WindowsElement consoleBoard = null;
         string firstWindow = "";
         string secondWindow = "";
         string windowTitle = "";
@@ -44,6 +43,7 @@ namespace ScrabbleAppiumTest
 
             // Switch to first window 
             windowHandler = textSession.SwitchTo().Window(firstWindow);
+            SaveScreenShotToDocuments(textSession);
 
             // Verify first window title
             windowTitle = windowHandler.Title;
@@ -55,11 +55,13 @@ namespace ScrabbleAppiumTest
             textbox.Click();
             textbox.SendKeys("PASS");
             Assert.AreEqual("PASS", textbox.Text);
+            SaveScreenShotToDocuments(textSession);
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
             Thread.Sleep(1500);
 
             // Switch to second window
             textSession.SwitchTo().Window(secondWindow);
+            SaveScreenShotToDocuments(textSession);
 
             // Verify second window title 
             windowTitle = windowHandler.Title;
@@ -71,6 +73,7 @@ namespace ScrabbleAppiumTest
             textbox.Click();
             textbox.SendKeys("RANK");
             Assert.AreEqual("RANK", textbox.Text);
+            SaveScreenShotToDocuments(textSession);
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
             Thread.Sleep(1500);
         }

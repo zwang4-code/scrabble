@@ -52,10 +52,20 @@ namespace ScrabbleAppiumTest
             dropdown2.SendKeys(mode);
             dropdown2.SendKeys(Keys.Enter);
 
+            SaveScreenShotToDocuments(session);
+
             // Start session
             startbutton = session.FindElementByAccessibilityId("StartButton");
             startbutton.Click();
             Thread.Sleep(1500);
+        }
+
+        public void SaveScreenShotToDocuments(WindowsDriver<WindowsElement> session)
+        { 
+            Screenshot screenshot = session.GetScreenshot();
+            string fileName = string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+                      @"\Screenshot" + "_" + DateTime.Now.ToString("(dd_MMMM_hh_mm_ss_tt)") + ".png");
+            screenshot.SaveAsFile(fileName);
         }
 
         public void CloseWindows(WindowsDriver<WindowsElement> session)
