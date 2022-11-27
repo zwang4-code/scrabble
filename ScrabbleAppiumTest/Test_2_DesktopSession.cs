@@ -5,6 +5,8 @@ using System;
 using OpenQA.Selenium;
 using System.Windows.Controls.Primitives;
 using OpenQA.Selenium.Interactions;
+using System.Text;
+using System.Windows.Controls;
 
 namespace ScrabbleAppiumTest
 {
@@ -12,12 +14,16 @@ namespace ScrabbleAppiumTest
     public class Test_2_DesktopSession : SessionSetup
     {
         private static WindowsDriver<WindowsElement> desktopSession = null;
+        private WindowsElement logboard = null;
         private WindowsElement passbutton = null;
         private WindowsElement swapbutton = null;
         private WindowsElement finishbutton = null;
         private WindowsElement finishTurnButton = null;
         string firstWindow = "";
         string secondWindow = "";
+        string windowTitle = "";
+        string firstPlayer = "";
+        string secondPlayer = "";
         private IWebDriver windowHandler = null;
 
 
@@ -45,21 +51,47 @@ namespace ScrabbleAppiumTest
             // Assert 2 windows will open
             Assert.AreEqual(2, desktopSession.WindowHandles.Count);
 
-            // Swith to first window, press "Pass" button
+            // Swith to first window
             windowHandler = desktopSession.SwitchTo().Window(firstWindow);
+
+            // Verify window title and store player number 
             Assert.IsTrue(windowHandler.Title.Contains("ScrabbleDesktop"));
+            windowTitle = windowHandler.Title;
+            firstPlayer = windowTitle.Split('-')[0];
+
+            // Press "Pass" button
             passbutton = desktopSession.FindElementByAccessibilityId("PassButton");
             passbutton.Click();
             Thread.Sleep(1500);
 
-            // Swith to second window (next player's turn now), press "Swap" button 
+            // Verify that first player's logboard has the following infor
+            logboard = desktopSession.FindElementByAccessibilityId("LogBoard");
+            Assert.IsTrue(logboard.Text.Contains(firstPlayer + "first!"));
+            Assert.IsTrue(logboard.Text.Contains(firstPlayer + "passed!"));
+
+            // Swith to second window (next player's turn now)
             windowHandler = desktopSession.SwitchTo().Window(secondWindow);
+
+            // Verify window title and store player number
             Assert.IsTrue(windowHandler.Title.Contains("ScrabbleDesktop"));
+            windowTitle = windowHandler.Title;
+            secondPlayer = windowTitle.Split('-')[0];
+
+            // Verity that second player's logboard is updated with the following info
+            logboard = desktopSession.FindElementByAccessibilityId("LogBoard");
+            Assert.IsTrue(logboard.Text.Contains("Your turn!"));
+            Assert.IsTrue(logboard.Text.Contains(firstPlayer + "passed!"));
+
+            // Press "Swap" button
             swapbutton = desktopSession.FindElementByAccessibilityId("SwapButton");
             swapbutton.Click();
             Thread.Sleep(1500);
 
-            // Move pointer away to see "Swap" button change color
+            // Verify the player's logboard is updated with the following info
+            logboard = desktopSession.FindElementByAccessibilityId("LogBoard");
+            Assert.IsTrue(logboard.Text.Contains("Select the tiles you don't want...Then press the FINISH button."));
+
+            // Move pointer away to see "Swap" button change color and change to "Finish"
             Actions action = new Actions(desktopSession);
             action.MoveByOffset(50, 50).Perform();
 
@@ -68,11 +100,25 @@ namespace ScrabbleAppiumTest
             finishbutton.Click();
             Thread.Sleep(1500);
 
-            // Switch to first window (next player's turn now), press "Finish Turn" button
+            // Verify the second player's logboard is updated with the following info
+            logboard = desktopSession.FindElementByAccessibilityId("LogBoard");
+            Assert.IsTrue(logboard.Text.Contains(secondPlayer + "swapped his tiles!"));
+            Assert.IsTrue(logboard.Text.Contains(secondPlayer + "finished his turn!"));
+
+            // Switch to first window (next player's turn now)
             windowHandler = desktopSession.SwitchTo().Window(firstWindow);
+
+            // Verify the first player's logboard is updated with the following info
+            logboard = desktopSession.FindElementByAccessibilityId("LogBoard");
+            Assert.IsTrue(logboard.Text.Contains("Your turn!"));
+            Assert.IsTrue(logboard.Text.Contains(secondPlayer + "swapped his tiles!"));
+
+            // Press "Finish Turn" button
             finishTurnButton = desktopSession.FindElementByAccessibilityId("ValidateButton");
-            Thread.Sleep(1000);
             finishTurnButton.Click();
+
+            // Verify the first player's logboard is update with the following info
+            Assert.IsTrue(logboard.Text.Contains("Game Judge: \"You didn't score. Please try again!\""));
             Thread.Sleep(1500);
         }
 
