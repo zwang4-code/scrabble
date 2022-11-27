@@ -11,8 +11,10 @@ namespace ScrabbleAppiumTest
     {
         private static WindowsDriver<WindowsElement> textSession = null;
         private WindowsElement textbox = null;
+        private WindowsElement consoleBoard = null;
         string firstWindow = "";
         string secondWindow = "";
+        string windowTitle = "";
         private IWebDriver windowHandler = null;
 
 
@@ -40,9 +42,15 @@ namespace ScrabbleAppiumTest
             // Assert 2 windows will open
             Assert.AreEqual(2, textSession.WindowHandles.Count);
 
-            // Enter "PASS" in textbox of first window
+            // Switch to first window 
             windowHandler = textSession.SwitchTo().Window(firstWindow);
+
+            // Verify first window title
+            windowTitle = windowHandler.Title;
+            Assert.IsTrue(windowTitle.Contains("ScrabbleConsole"));
             Console.WriteLine(windowHandler.Title + " window open");
+
+            // Enter "PASS" in textbox of first window
             textbox = textSession.FindElementByAccessibilityId("UserInputBox");
             textbox.Click();
             textbox.SendKeys("PASS");
@@ -50,9 +58,15 @@ namespace ScrabbleAppiumTest
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
             Thread.Sleep(1500);
 
-            // Enter "RANK" in textbox of second window
+            // Switch to second window
             textSession.SwitchTo().Window(secondWindow);
+
+            // Verify second window title 
+            windowTitle = windowHandler.Title;
+            Assert.IsTrue(windowTitle.Contains("ScrabbleConsole"));
             Console.WriteLine(windowHandler.Title + " window open");
+
+            // Enter "RANK" in textbox of second window
             textbox = textSession.FindElementByAccessibilityId("UserInputBox");
             textbox.Click();
             textbox.SendKeys("RANK");
