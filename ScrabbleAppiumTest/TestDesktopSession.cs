@@ -3,7 +3,6 @@ using OpenQA.Selenium.Appium.Windows;
 using System.Threading;
 using System;
 using OpenQA.Selenium;
-using System.Windows.Controls;
 
 namespace ScrabbleAppiumTest
 {
@@ -11,11 +10,11 @@ namespace ScrabbleAppiumTest
     public class DesktopSessionTest : SessionSetup
     {
         private static WindowsDriver<WindowsElement> desktopSession = null;
-        private static WindowsElement dropdown = null;
-        private static WindowsElement dropdown2 = null;
-        private static WindowsElement startbutton = null;
-        private static WindowsElement finishbutton = null;
-        private static IWebDriver windowHandler = null;
+        private WindowsElement dropdown = null;
+        private WindowsElement dropdown2 = null;
+        private WindowsElement startbutton = null;
+        private WindowsElement finishbutton = null;
+        private IWebDriver windowHandler = null;
 
 
         [ClassInitialize]
@@ -52,23 +51,29 @@ namespace ScrabbleAppiumTest
             string firstWindow = desktopSession.WindowHandles[0];
             string secondWindow = desktopSession.WindowHandles[1];
 
-            // Switch to first window, press "Finish" button, then close window
+            // Switch to first window, press "Finish" button
             windowHandler = desktopSession.SwitchTo().Window(firstWindow);
-            Console.WriteLine(windowHandler.Title, " window open");
+            Console.WriteLine(windowHandler.Title + " window open");
             finishbutton = desktopSession.FindElementByAccessibilityId("ValidateButton");
             finishbutton.Click();
-            windowHandler.Close();
             Thread.Sleep(1500);
 
-            // Switch to second window, then close window
+            // Switch to second window
             windowHandler = desktopSession.SwitchTo().Window(secondWindow);
-            Console.WriteLine(windowHandler.Title, " window open");
-            windowHandler.Close();
+            Console.WriteLine(windowHandler.Title + " window open");
+            Thread.Sleep(1500);
+
+            // Close all windows
+            CloseWindows(desktopSession);
 
             // Assert no window open
             Assert.AreEqual(0, desktopSession.WindowHandles.Count);
-            Thread.Sleep(1500);
         }
 
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            desktopSession.Quit();
+        }
     }
 }

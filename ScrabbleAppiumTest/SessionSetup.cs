@@ -5,9 +5,7 @@ using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Windows.Documents;
 
 namespace ScrabbleAppiumTest
 {
@@ -36,36 +34,20 @@ namespace ScrabbleAppiumTest
             return session;
         }
 
-        // TODO: TRIED TO WRITE CLOSE WINDOWS INSTRUCTIONS HERE BUT DID NOT WORK.. 
-        public static void CloseWindows(WindowsDriver<WindowsElement> session)
+        public void CloseWindows(WindowsDriver<WindowsElement> session)
         {
             // Close all the windows
             if (session != null)
             {
                 IReadOnlyCollection<String> allWindows = session.WindowHandles;
 
-                List<IWebDriver> windowHandlers = null;
-
                 foreach (String oneWindow in allWindows)
                 {
-                    windowHandlers.Add(session.SwitchTo().Window(oneWindow));
-
-                }
-
-                foreach (IWebDriver windowHandler in windowHandlers)
-                {
+                    IWebDriver windowHandler = session.SwitchTo().Window(oneWindow);
                     windowHandler.Close();
-                    Console.WriteLine(windowHandler.Title, " window closed");
+                    Thread.Sleep(1500);
                 }
-
             }
-            // Assert all windows are closed
-            Assert.AreEqual(0, session.WindowHandles.Count);
-
-            // Close the session
-            session.Quit();
-            Console.WriteLine("Session ended");
-            Thread.Sleep(1500);
         }
     }
 }

@@ -7,15 +7,11 @@ using System.Windows.Controls;
 namespace ScrabbleAppiumTest
 {
     [TestClass]
-    public class MenuPageTest : SessionSetup
+    public class TestMenuSession : SessionSetup
     {
         private static WindowsDriver<WindowsElement> menuSession = null;
-        private static WindowsElement dropdown = null;
-        private static WindowsElement dropdown2 = null;
-        private static WindowsElement startbutton = null;
-        private static WindowsElement finishbutton = null;
-        private static WindowsElement textbox = null;
-        private static IWebDriver windowHandler = null;
+        private WindowsElement dropdown = null;
+        private IWebDriver windowHandler = null;
 
 
         [ClassInitialize]
@@ -57,12 +53,18 @@ namespace ScrabbleAppiumTest
             dropdown.SendKeys(Keys.Enter);
             Assert.AreEqual("Text", dropdown.Text);
             Thread.Sleep(1500);
+
+            // Close window
+            CloseWindows(menuSession);
+
+            // Assert no window open
+            Assert.AreEqual(0, menuSession.WindowHandles.Count);
         }
 
-        //[ClassCleanup]
-        //public static void ClassCleanup()
-        //{
-        //    CloseWindows(menuSession);
-        //}
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            menuSession.Quit();
+        }
     }
 }

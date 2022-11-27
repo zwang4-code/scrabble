@@ -3,20 +3,18 @@ using OpenQA.Selenium.Appium.Windows;
 using System.Threading;
 using System;
 using OpenQA.Selenium;
-using System.Windows.Controls;
 
 namespace ScrabbleAppiumTest
 {
     [TestClass]
-    public class TextSessionTest : SessionSetup
+    public class TestTextSession : SessionSetup
     {
         private static WindowsDriver<WindowsElement> textSession = null;
-        private static WindowsElement dropdown = null;
-        private static WindowsElement dropdown2 = null;
-        private static WindowsElement startbutton = null;
-        private static WindowsElement finishbutton = null;
-        private static WindowsElement textbox = null;
-        private static IWebDriver windowHandler = null;
+        private WindowsElement dropdown = null;
+        private WindowsElement dropdown2 = null;
+        private WindowsElement startbutton = null;
+        private WindowsElement textbox = null;
+        private IWebDriver windowHandler = null;
 
 
         [ClassInitialize]
@@ -45,32 +43,44 @@ namespace ScrabbleAppiumTest
             startbutton = textSession.FindElementByAccessibilityId("StartButton");
             startbutton.Click();
 
-            // 
-            windowHandler = textSession.SwitchTo().Window(textSession.WindowHandles[0]);
+            // Assert 2 windows will open
+            Assert.AreEqual(2, textSession.WindowHandles.Count);
+
+            // Get names of the window handlers
+            string firstWindow = textSession.WindowHandles[0];
+            string secondWindow = textSession.WindowHandles[1];
+
+            // Enter "PASS" in textbox of first window
+            windowHandler = textSession.SwitchTo().Window(firstWindow);
+            Console.WriteLine(windowHandler.Title + " window open");
             textbox = textSession.FindElementByAccessibilityId("UserInputBox");
             textbox.Click();
             textbox.SendKeys("PASS");
             Assert.AreEqual("PASS", textbox.Text);
-            Thread.Sleep(2000);
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(1500);
 
-            textSession.SwitchTo().Window(textSession.WindowHandles[1]);
+            // Enter "RANK" in textbox of second window
+            textSession.SwitchTo().Window(secondWindow);
+            Console.WriteLine(windowHandler.Title + " window open");
             textbox = textSession.FindElementByAccessibilityId("UserInputBox");
             textbox.Click();
             textbox.SendKeys("RANK");
             Assert.AreEqual("RANK", textbox.Text);
-            Thread.Sleep(2000);
             textSession.FindElementByAccessibilityId("SubmitButton").Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(1500);
+
+            // Close all windows
+            CloseWindows(textSession);
+
+            // Assert no window open
+            Assert.AreEqual(0, textSession.WindowHandles.Count);
         }
 
-
-        //[ClassCleanup]
-        //public static void SessionCleanup()
-        //{
-        //    CloseWindows();
-        //}
-
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            textSession.Quit();
+        }
     }
 }
