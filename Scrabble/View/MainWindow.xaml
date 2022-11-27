@@ -48,7 +48,7 @@
         <Label Content="Player 1" FontSize="13" FontFamily="Georgia" HorizontalAlignment="Left" Margin="82,14.4,0,0" Grid.Row="1" VerticalAlignment="Top" Height="25" Width="63"/>
         <Label x:Name="Label_Copy" FontSize="30" FontFamily="Georgia" HorizontalContentAlignment="Center" Content="Welcome players!" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Height="51" Width="452"/>
         <Button Content="Start" Name="StartButton" FontFamily="Georgia" FontSize="27" Background="Goldenrod" HorizontalAlignment="Left" Margin="349,176.4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="89" Height="64" Click="Button_Click"/>
-        <Button Content="About" FontFamily="Georgia" FontSize="15" Background="AntiqueWhite" HorizontalAlignment="Left" Margin="349,144.4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="89" Height="20" Click="AboutButton_Click"/>
+        <Button Content="About" Name="AboutButton" FontFamily="Georgia" FontSize="15" Background="AntiqueWhite" HorizontalAlignment="Left" Margin="349,144.4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="89" Height="20" Click="AboutButton_Click"/>
 
     </Grid>
 </Window>

@@ -43,11 +43,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestMenuSession.cs" />
+    <Compile Include="Test_1_MenuSession.cs" />
     <Compile Include="SessionSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDesktopSession.cs" />
-    <Compile Include="TestTextSession.cs" />
+    <Compile Include="Test_2_DesktopSession.cs" />
+    <Compile Include="Test_3_TextSession.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Castle.Core">
