@@ -11,8 +11,8 @@ namespace ScrabbleAppiumTest
 {
     public class SessionSetup
     {
-        // Note: append /wd/hub to the URL if you're directing the test at Appium
-        private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723/wd/hub";
+        // Note: append /wd/hub to the URL if you're using Appium Server to run these tests
+        private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
         private const string ScrabblePath = @"C:\Users\hh\Desktop\5210-Scrabble-GitHub\Scrabble\bin\Debug\Scrabble2018.exe";
         //@"C:\Users\vdeepak\Downloads\Preedhi\Team2_Scrabble\Scrabble\bin\Debug\Scrabble2018.exe";
         //@"C:\Users\hh\Desktop\5210-Scrabble-GitHub\Scrabble\bin\Debug\Scrabble2018.exe";
