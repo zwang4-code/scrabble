@@ -74,7 +74,7 @@ namespace ScrabbleTest
             _playerManager.GetNewTiles(gameState, LoC, 0);
 
             // Assert
-            Assert.AreNotEqual(letter, gameState.ListOfPlayers[0].PlayingTiles[0].TileChar);
+            Assert.AreNotSame(letter, gameState.ListOfPlayers[0].PlayingTiles[0].TileChar);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace ScrabbleTest
             char swapedChar = _playerManager.Swap(letter);
 
             // Assert
-            Assert.AreNotEqual(letter, swapedChar);
+            Assert.AreNotSame(letter, swapedChar);
         }
     }
 }
