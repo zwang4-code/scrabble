@@ -79,7 +79,7 @@ namespace ScrabbleTest
 
         [Test]
         [TestCase('c', 10, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('c')")]
-        [TestCase('A', 1, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('A')")]
+        [TestCase('M', 1, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('M')")]
         [TestCase('Z', 26, TestName = "Swap_ReturnRandomCharacter_GivenValidCharacter('Z')")]
         public void Swap_ReturnRandomCharacter_GivenValidCharacter(char letter, int tileValue)
         {
