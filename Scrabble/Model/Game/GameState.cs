@@ -37,8 +37,7 @@ namespace Scrabble.Model
                 return gsInstance;
             }
         }
-        public static void ResetState() { gsInstance = null; }
-
+     
         public void GamePass()
         {
             PrevPlayer = PlayerNow;
