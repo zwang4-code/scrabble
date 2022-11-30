@@ -108,7 +108,7 @@ namespace ScrabbleTest.Controller
             game.GetNewTiles(LoC, 0);
 
             // Assert
-            Assert.AreNotEqual(letter, game.gs.ListOfPlayers[0].PlayingTiles[0].TileChar);
+            Assert.AreNotSame(letter, game.gs.ListOfPlayers[0].PlayingTiles[0].TileChar);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace ScrabbleTest.Controller
             char swapedChar = game.SwapChar(letter);
 
             // Assert
-            Assert.AreNotEqual(letter, swapedChar);
+            Assert.AreNotSame(letter, swapedChar);
         }
 
         [Test]

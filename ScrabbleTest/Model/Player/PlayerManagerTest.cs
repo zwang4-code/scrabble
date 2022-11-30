@@ -95,7 +95,7 @@ namespace ScrabbleTest
             char swapedChar = _playerManager.Swap(letter);
 
             // Assert
-            Assert.AreNotEqual(letter, swapedChar);
+            Assert.AreNotSame(letter, swapedChar);
         }
     }
 }
