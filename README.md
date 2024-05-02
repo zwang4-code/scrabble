@@ -1,4 +1,5 @@
-# Team2_Scrabble
+# Scrabble
+#### Testing and Debugging class project
 We plan to test the game Scrabble (URL: https://github.com/poyea/scrabble ).  This game is written in C#
 
 We will be using the NUnit framework to perform  our unit tests using Visual Studio. 
